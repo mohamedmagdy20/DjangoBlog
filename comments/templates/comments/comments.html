@@ -1,0 +1,67 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<article class="media content-section">
+    <img class="rounded-circle article-img" src="{{post.author.profile.image.url }}" alt="">
+    <div class="media-body">
+      <div class="article-metadata">
+        <a class="mr-2" href="{% url 'profile' %}">{{ post.author }}</a>
+        <small class="text-muted">{{ post.date_posted }}</small>
+      </div>
+      <h2><a class="article-title" href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
+      <p class="article-content">{{ post.content }}</p>
+      <div class="d-flex align-item-center">
+        <div class="star p-1">
+          <a onclick="addStar({{post.id}})"><i class="fa-regular fa-star text-warning"></i> <small id="stars-{{post.id}}">{{post.stars}}</small></a>
+        </div>
+        <div class="comment p-1">
+            <a href="" data-toggle="modal" data-target="#exampleModal"><i class="fa-regular fa-comment"></i> <small>{{comment_count}}</small></a>
+          </div>
+      </div>
+    </div>
+  </article>
+    {% for comment in comments %}
+    <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{comment.user.profile.image.url }}" alt="">
+        <div class="media-body">
+          {% if comment.user == user %}
+          <div>
+            <a href="{% url 'deletecomment' comment.id %}" class="text-danger"><i class="fa fa-trash"></i>
+            </a>
+          </div>
+          {% endif %}
+          <div class="article-metadata">
+            <a class="mr-2" href="{% url 'profile' %}">{{ comment.user.username }}</a>
+            <small class="text-muted">{{ comment.data_comment }}</small>
+          </div>
+          <p class="article-content">{{ comment.comment }}</p>
+        </div>
+      </article>
+    
+    {% endfor %}
+
+    <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Comment</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form action="" method="post">
+                {% csrf_token %}
+                {{form|crispy}}
+        </div>
+        <div class="modal-footer">
+          <a  class="btn btn-outline-secondary" data-dismiss="modal">Close</a>
+          <button type="submit" class="btn btn-outline-primary">Save</button>
+        </div>
+    </form>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

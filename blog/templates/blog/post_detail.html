@@ -1,0 +1,30 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
+        <article class="media content-section">
+          <img class="rounded-circle article-img" src="{{object.author.profile.image.url }}" alt="">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{% url 'profile' %}">{{ object.author }}</a>
+              <small class="text-muted">{{ object.date_posted }}</small>
+                  {% if object.author == user %}
+                  <a class="btn btn-info btn-sm" href="{% url 'post_update' object.id %}">Edit Post</a>
+                  <a class="btn btn-danger btn-sm" href="{% url 'post_delete' object.id %}">Delete Post</a>
+                  {% endif %}
+                
+            </div>
+            <h2 class="article-title" >{{ object.title }}</h2>
+            <p class="article-content">{{ object.content }}</p>
+            <div class="d-flex align-item-center">
+              <div class="star p-1">
+                <a onclick="addStar({{object.id}})"><i class="fa-regular fa-star text-warning"></i> <small id="stars-{{post.id}}">{{post.stars}}</small></a>
+              </div>
+              <div class="comment p-1">
+              <a href="{% url 'showcomments' object.id %}"><i class="fa-regular fa-comment"></i> <small>{{object.comment.comment}}</small></a>
+              </div>
+            </div>
+          </div>
+         
+        </article>
+
+{% endblock %}
